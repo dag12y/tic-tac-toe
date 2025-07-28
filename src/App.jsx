@@ -1,4 +1,14 @@
+import { useState } from "react";
+
 export default function App() {
+    let [active,setActive]=useState(true)
+    
+    function handleClick(event,active){
+        if(event.target.textContent===''){
+            event.target.textContent = active ? "X" : "O";
+            setActive((prev) => !prev);
+        }
+    }
     
 
     return (
@@ -37,38 +47,65 @@ export default function App() {
                     <div
                         className="cell h-24 bg-blue-100 rounded-lg shadow-md flex items-center justify-center text-4xl font-bold cursor-pointer hover:bg-blue-200 transition"
                         data-index="0"
+                        onClick={(event) => {
+                            handleClick(event, active);
+                        }}
                     ></div>
                     <div
                         className="cell h-24 bg-blue-100 rounded-lg shadow-md flex items-center justify-center text-4xl font-bold cursor-pointer hover:bg-blue-200 transition"
                         data-index="1"
+                        onClick={(event) => {
+                            handleClick(event, active);
+                        }}
                     ></div>
                     <div
                         className="cell h-24 bg-blue-100 rounded-lg shadow-md flex items-center justify-center text-4xl font-bold cursor-pointer hover:bg-blue-200 transition"
                         data-index="2"
+                        onClick={(event) => {
+                            handleClick(event, active);
+                        }}
                     ></div>
                     <div
                         className="cell h-24 bg-blue-100 rounded-lg shadow-md flex items-center justify-center text-4xl font-bold cursor-pointer hover:bg-blue-200 transition"
                         data-index="3"
+                        onClick={(event) => {
+                            handleClick(event, active);
+                        }}
                     ></div>
                     <div
                         className="cell h-24 bg-blue-100 rounded-lg shadow-md flex items-center justify-center text-4xl font-bold cursor-pointer hover:bg-blue-200 transition"
                         data-index="4"
+                        onClick={(event) => {
+                            handleClick(event, active);
+                        }}
                     ></div>
                     <div
                         className="cell h-24 bg-blue-100 rounded-lg shadow-md flex items-center justify-center text-4xl font-bold cursor-pointer hover:bg-blue-200 transition"
                         data-index="5"
+                        onClick={(event) => {
+                            handleClick(event, active);
+                        }}
                     ></div>
                     <div
                         className="cell h-24 bg-blue-100 rounded-lg shadow-md flex items-center justify-center text-4xl font-bold cursor-pointer hover:bg-blue-200 transition"
                         data-index="6"
+                        onClick={(event) => {
+                            handleClick(event, active);
+                        }}
                     ></div>
                     <div
                         className="cell h-24 bg-blue-100 rounded-lg shadow-md flex items-center justify-center text-4xl font-bold cursor-pointer hover:bg-blue-200 transition"
                         data-index="7"
+                        onClick={(event) => {
+                            handleClick(event, active);
+                        }}
                     ></div>
                     <div
                         className="cell h-24 bg-blue-100 rounded-lg shadow-md flex items-center justify-center text-4xl font-bold cursor-pointer hover:bg-blue-200 transition"
                         data-index="8"
+                        onClick={(event) => {
+                            handleClick(event, active);
+                        }}
                     ></div>
                 </div>
 

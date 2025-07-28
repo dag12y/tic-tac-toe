@@ -2,44 +2,80 @@ import { useEffect, useState } from "react";
 
 export default function App() {
     let [active, setActive] = useState(true);
-    let [scores, setScores] = useState();
-    let [gameState,setGameState] = useState(["", "", "", "", "", "", "", "", ""]);
+    let [isGame, setIsGame] = useState(true);
+    let [scores, setScores] = useState({ X: 0, O: 0 }); // Changed 'x' to 'X'
+    let [gameState, setGameState] = useState(Array(9).fill(""));
+
     const winningConditions = [
         [0, 1, 2],
         [3, 4, 5],
-        [6, 7, 8], // rows
+        [6, 7, 8],
         [0, 3, 6],
         [1, 4, 7],
-        [2, 5, 8], // columns
+        [2, 5, 8],
         [0, 4, 8],
-        [2, 4, 6], // diagonals
+        [2, 4, 6],
     ];
-    const [status,setStatus]=useState('Player X\'s turn')
 
-    function handleClick(event) {
-            const index = Number(event.target.getAttribute("data-index"));
+    const [status, setStatus] = useState("Player X's turn");
 
-            if(gameState[index]!=='') return;
+    function handleClick(index) {
+        if (gameState[index] !== "" || !isGame) return;
 
-            setGameState(prev=>{
-                const updated=[...prev];
-                updated[index]=active ? "X" : "O"
-                return updated
-            });
-            
-            setActive((prev) => !prev);
-            setStatus(`Player ${!active ? 'X' :'O'}'s turn`)
-        
+        const currentPlayer = active ? "X" : "O";
+
+        setGameState((prev) => {
+            const updated = [...prev];
+            updated[index] = currentPlayer;
+            return updated;
+        });
+
+        setActive((prev) => !prev);
     }
-    
-    // function checkResult(){
-    //     let gameWon=false;
-    //     for(let i=0;i<winningConditions.length;i++){
-    //         const[a,b,c]=winningConditions[i];
-    //         if
-    //     }
 
-    // }
+    useEffect(() => {
+        checkResult();
+    }, [gameState]);
+
+    function checkResult() {
+        for (let i = 0; i < winningConditions.length; i++) {
+            const [a, b, c] = winningConditions[i];
+            if (
+                gameState[a] &&
+                gameState[a] === gameState[b] &&
+                gameState[b] === gameState[c]
+            ) {
+                const winner = gameState[a];
+                setStatus(`Player ${winner} Won`);
+                setIsGame(false);
+                setScores((prev) => ({
+                    ...prev,
+                    [winner]: prev[winner] + 1,
+                }));
+                return;
+            }
+        }
+
+        if (!gameState.includes("")) {
+            setStatus("It's a draw!");
+            setIsGame(false);
+            return;
+        }
+
+        setStatus(`Player ${active ? "O" : "X"}'s turn`);
+    }
+
+    function resetGame() {
+        setGameState(Array(9).fill(""));
+        setActive(true);
+        setIsGame(true);
+        setStatus("Player X's turn");
+    }
+
+    function newGame() {
+        resetGame();
+        setScores({ X: 0, O: 0 });
+    }
 
     return (
         <div className="bg-blue-950 min-h-screen flex flex-col items-center justify-center p-4">
@@ -49,10 +85,7 @@ export default function App() {
                 </h1>
 
                 <div className="bg-blue-200 rounded-lg shadow-md p-4 mb-6 text-center">
-                    <p
-                        id="status"
-                        className="text-xl font-semibold text-gray-800"
-                    >
+                    <p className="text-xl font-semibold text-gray-800">
                         {status}
                     </p>
                     <div className="flex justify-between mt-2">
@@ -60,15 +93,11 @@ export default function App() {
                             <span className="font-bold text-indigo-600">
                                 X:
                             </span>
-                            <span id="score-x" className="ml-1">
-                                0
-                            </span>
+                            <span className="ml-1">{scores.X}</span>
                         </span>
                         <span className="text-lg">
                             <span className="font-bold text-pink-600">O:</span>
-                            <span id="score-o" className="ml-1">
-                                0
-                            </span>
+                            <span className="ml-1">{scores.O}</span>
                         </span>
                     </div>
                 </div>
@@ -78,8 +107,7 @@ export default function App() {
                         <div
                             key={index}
                             className="cell h-24 bg-blue-100 rounded-lg shadow-md flex items-center justify-center text-4xl font-bold cursor-pointer hover:bg-blue-200 transition"
-                            data-index={index}
-                            onClick={(event) => handleClick(event)}
+                            onClick={() => handleClick(index)}
                         >
                             {value}
                         </div>
@@ -88,13 +116,13 @@ export default function App() {
 
                 <div className="flex flex-col sm:flex-row gap-3">
                     <button
-                        id="reset"
+                        onClick={resetGame}
                         className="flex-1 bg-blue-800 hover:bg-blue-900 text-white font-medium py-2 px-4 rounded-lg transition"
                     >
                         Reset Game
                     </button>
                     <button
-                        id="new-game"
+                        onClick={newGame}
                         className="flex-1 bg-green-600 hover:bg-green-700 text-white font-medium py-2 px-4 rounded-lg transition"
                     >
                         New Game

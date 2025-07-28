@@ -1,15 +1,45 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function App() {
-    let [active,setActive]=useState(true)
-    
-    function handleClick(event,active){
-        if(event.target.textContent===''){
-            event.target.textContent = active ? "X" : "O";
+    let [active, setActive] = useState(true);
+    let [scores, setScores] = useState();
+    let [gameState,setGameState] = useState(["", "", "", "", "", "", "", "", ""]);
+    const winningConditions = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8], // rows
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8], // columns
+        [0, 4, 8],
+        [2, 4, 6], // diagonals
+    ];
+    const [status,setStatus]=useState('Player X\'s turn')
+
+    function handleClick(event) {
+            const index = Number(event.target.getAttribute("data-index"));
+
+            if(gameState[index]!=='') return;
+
+            setGameState(prev=>{
+                const updated=[...prev];
+                updated[index]=active ? "X" : "O"
+                return updated
+            });
+            
             setActive((prev) => !prev);
-        }
+            setStatus(`Player ${!active ? 'X' :'O'}'s turn`)
+        
     }
     
+    // function checkResult(){
+    //     let gameWon=false;
+    //     for(let i=0;i<winningConditions.length;i++){
+    //         const[a,b,c]=winningConditions[i];
+    //         if
+    //     }
+
+    // }
 
     return (
         <div className="bg-blue-950 min-h-screen flex flex-col items-center justify-center p-4">
@@ -23,7 +53,7 @@ export default function App() {
                         id="status"
                         className="text-xl font-semibold text-gray-800"
                     >
-                        Player X's turn
+                        {status}
                     </p>
                     <div className="flex justify-between mt-2">
                         <span className="text-lg">
@@ -44,69 +74,16 @@ export default function App() {
                 </div>
 
                 <div className="grid grid-cols-3 gap-3 mb-6">
-                    <div
-                        className="cell h-24 bg-blue-100 rounded-lg shadow-md flex items-center justify-center text-4xl font-bold cursor-pointer hover:bg-blue-200 transition"
-                        data-index="0"
-                        onClick={(event) => {
-                            handleClick(event, active);
-                        }}
-                    ></div>
-                    <div
-                        className="cell h-24 bg-blue-100 rounded-lg shadow-md flex items-center justify-center text-4xl font-bold cursor-pointer hover:bg-blue-200 transition"
-                        data-index="1"
-                        onClick={(event) => {
-                            handleClick(event, active);
-                        }}
-                    ></div>
-                    <div
-                        className="cell h-24 bg-blue-100 rounded-lg shadow-md flex items-center justify-center text-4xl font-bold cursor-pointer hover:bg-blue-200 transition"
-                        data-index="2"
-                        onClick={(event) => {
-                            handleClick(event, active);
-                        }}
-                    ></div>
-                    <div
-                        className="cell h-24 bg-blue-100 rounded-lg shadow-md flex items-center justify-center text-4xl font-bold cursor-pointer hover:bg-blue-200 transition"
-                        data-index="3"
-                        onClick={(event) => {
-                            handleClick(event, active);
-                        }}
-                    ></div>
-                    <div
-                        className="cell h-24 bg-blue-100 rounded-lg shadow-md flex items-center justify-center text-4xl font-bold cursor-pointer hover:bg-blue-200 transition"
-                        data-index="4"
-                        onClick={(event) => {
-                            handleClick(event, active);
-                        }}
-                    ></div>
-                    <div
-                        className="cell h-24 bg-blue-100 rounded-lg shadow-md flex items-center justify-center text-4xl font-bold cursor-pointer hover:bg-blue-200 transition"
-                        data-index="5"
-                        onClick={(event) => {
-                            handleClick(event, active);
-                        }}
-                    ></div>
-                    <div
-                        className="cell h-24 bg-blue-100 rounded-lg shadow-md flex items-center justify-center text-4xl font-bold cursor-pointer hover:bg-blue-200 transition"
-                        data-index="6"
-                        onClick={(event) => {
-                            handleClick(event, active);
-                        }}
-                    ></div>
-                    <div
-                        className="cell h-24 bg-blue-100 rounded-lg shadow-md flex items-center justify-center text-4xl font-bold cursor-pointer hover:bg-blue-200 transition"
-                        data-index="7"
-                        onClick={(event) => {
-                            handleClick(event, active);
-                        }}
-                    ></div>
-                    <div
-                        className="cell h-24 bg-blue-100 rounded-lg shadow-md flex items-center justify-center text-4xl font-bold cursor-pointer hover:bg-blue-200 transition"
-                        data-index="8"
-                        onClick={(event) => {
-                            handleClick(event, active);
-                        }}
-                    ></div>
+                    {gameState.map((value, index) => (
+                        <div
+                            key={index}
+                            className="cell h-24 bg-blue-100 rounded-lg shadow-md flex items-center justify-center text-4xl font-bold cursor-pointer hover:bg-blue-200 transition"
+                            data-index={index}
+                            onClick={(event) => handleClick(event)}
+                        >
+                            {value}
+                        </div>
+                    ))}
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-3">

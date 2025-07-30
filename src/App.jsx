@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
 
 export default function App() {
+    // state variables
     let [active, setActive] = useState(true);
     let [isGame, setIsGame] = useState(true);
-    let [scores, setScores] = useState({ X: 0, O: 0 }); // Changed 'x' to 'X'
+    let [scores, setScores] = useState({ X: 0, O: 0 });
     let [gameState, setGameState] = useState(Array(9).fill(""));
+    const [status, setStatus] = useState("Player X's turn");
 
+    // static variables
     const winningConditions = [
         [0, 1, 2],
         [3, 4, 5],
@@ -17,8 +20,7 @@ export default function App() {
         [2, 4, 6],
     ];
 
-    const [status, setStatus] = useState("Player X's turn");
-
+    // functions
     function handleClick(index) {
         if (gameState[index] !== "" || !isGame) return;
 
@@ -29,13 +31,8 @@ export default function App() {
             updated[index] = currentPlayer;
             return updated;
         });
-
         setActive((prev) => !prev);
     }
-
-    useEffect(() => {
-        checkResult();
-    }, [gameState]);
 
     function checkResult() {
         for (let i = 0; i < winningConditions.length; i++) {
@@ -64,6 +61,11 @@ export default function App() {
 
         setStatus(`Player ${active ? "O" : "X"}'s turn`);
     }
+
+    //checking the gamestata with every change made upon it.
+    useEffect(() => {
+        checkResult();
+    }, [gameState]);
 
     function resetGame() {
         setGameState(Array(9).fill(""));
